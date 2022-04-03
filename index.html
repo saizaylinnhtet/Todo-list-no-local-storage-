@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoList</title>
+    <link rel="stylesheet" href="css/animate.css-main/animate.min.css">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html{
+            background-image: url(./resource/image/17545.jpg);
+            background-repeat: repeat-y;
+            position: relative;
+        }
+        .b-color{
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgb(120 40 250 / 63%);
+            z-index: 1;
+        }
+        .content{
+            position: relative;
+            z-index: 2;
+        }
+        h1{
+            text-align: center;
+            margin-top: 30px;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .result-box{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .inputs{
+            width: 300px;
+            padding: 0 10px;
+        }
+        .text{
+            width: 100%;
+            height: 40px;
+            caret-color: rgba(255, 255, 255, 0);
+            font-size: 1em;
+            background: none;
+            outline: none;
+            border: none;
+            border-left: 3px solid rgb(238, 236, 236);
+            padding-left: 10px;
+            color: rgb(238, 236, 236);
+        }
+       
+        .text::placeholder{
+            color: rgb(238, 236, 236);
+            font-size: 1.3em;
+        }
+        .date{
+            width: 50%;
+            border: none;
+            background:none;
+            outline: none;
+            top: -10px;
+            color: rgb(238, 236, 236);
+        }
+        .add{
+            width: 150px;
+            height: 50px;
+            outline: none;
+            border-radius: 5px;
+            border: none;
+            transition-duration: 0.5s;
+            cursor: pointer;
+        }
+        .add:hover{
+            transform: scale(104%);
+        }
+        .result-place{
+            width: 60%;
+            margin: 0 auto;
+            margin-top: 50px !important;
+        }
+        li{
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            background-color: rgb(226, 219, 211);
+            list-style: none;
+            transition-duration: 0.5s !important;
+            border-radius: 3px;
+        }
+        .list-items{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .date-box{
+            font-size: 12px;
+            font-style: italic;
+            font-weight: bold;
+            color: #680000;
+        }
+        li:hover {
+            transform: scale(103%,130%) !important;
+        }
+        li:hover .edit{
+            opacity: 1;
+        }
+        li:hover .del{
+            opacity: 1;
+        }
+        .listButtons{
+            height: 100%;
+        }
+        .edit,.del{
+            width: 100px;
+            height: 40px;
+            margin-left: 10px;
+            border-radius: 3px;
+            border: none;
+            transition: 0.5s;
+            background-color: rgb(120 40 250 / 81%);
+            box-shadow: 0 0 5px rgb(158, 158, 158);
+            color: white;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .edit:hover, .del:hover{
+            transform: scale(115%);
+        }
+
+        @media screen and (max-width: 1200px){
+            .result-place{
+                width: 95%;
+            }
+        }
+
+        @media screen and (max-width: 900px) {
+            .result-place{
+                width: 95%;
+            }
+            .result-box{
+                flex-direction: column;
+                align-items: center;
+            }
+            .text{
+                margin-right: 0;
+            }
+            .add{
+                margin-top: 10px;
+                height: 40px;
+            }
+            .edit,.del{
+                width: 85px;
+            }
+        }
+
+        @media screen and (max-width: 700px){
+            li{
+                padding: 5px 10px;
+                height: 80px;
+            }
+            .text{
+                width: 100%;
+            }
+            .listButtons{
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
+            .edit,.del{
+                width: 70px;
+                height: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="b-color"></div>
+    
+    <div class="content">
+        <h1>ToDo Lists</h1>
+        <div class="result-box">
+            <div class="inputs">
+                <input type="text" id="text" class="text" spellcheck="false" placeholder="Say something ...">
+                <input type="datetime-local" id="date" class="date">
+            </div>
+            <button class="add">Add</button>
+        </div>
+        <div class="result-place">
+            <ul>
+                
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        let input = document.getElementById("text");
+        let press = document.querySelector("add");
+        let result = document.querySelector("ul");
+        let minText = 3;
+        let i = 1;
+        // let localId = 1;
+        // let k= Object.keys(localStorage);
+        // k.sort();
+
+        // if(localStorage.length>0){
+        //     localId = Number(k[k.length-1])+1;
+        // }
+
+        function textFilter(x){
+            if(x){
+                if(x.length>minText){
+                    return x;
+                }
+                else{
+                    alert("The input must be longer than 3 letters");
+                }
+            }
+            else{
+                alert("The input is empty");    
+            }
+        }
+
+
+        //Old knowledge
+
+        // function showList(text,date){
+        //     result.innerHTML +=  
+        //             `<li class= "list-items" id ="listItem${i}">
+        //                 <div class="list-box">
+        //                     <span id="listText${i}">${text}</span>
+        //                     <div class="date-box">${date}</div>
+        //                 </div>
+        //                 <div class="listButtons">
+        //                     <button class="edit" id="edit" onclick="editList(${i});">Edit</button>
+        //                     <button class="del" id="del" onclick="deleteList(${i});">Delete</button>
+        //                 </div>
+        //             </li>`;
+        //         i++;
+        // }
+
+        //Node List
+        function showList(text,date){
+            let li = document.createElement("li");
+            let div1 = document.createElement("div");
+            let div2 = document.createElement("div");
+            let div3 = document.createElement("div");
+            li.classList = "list-items animate__animated animate__flipInX";
+            li.id = `listItem${i}`;
+            div1.classList = "list-box";
+            div2.classList = "listButtons";
+
+            li.appendChild(div1);
+            li.appendChild(div2);
+            result.appendChild(li);
+
+            let span = document.createElement("span");
+            let content = document.createTextNode(text);
+            let dateContent = document.createTextNode(date);
+            span.id = `listText${i}`;
+            div3.classList = "date-box";
+            div1.appendChild(span);
+            div1.appendChild(div3);
+            span.appendChild(content);
+            div3.appendChild(dateContent);
+
+            let but1 = document.createElement("button");
+            let but2 = document.createElement("button");
+            but1.classList = "edit";
+            but1.id = "edit";
+            but1.setAttribute("onclick", `editList(${i})`);
+            but2.classList = "del";
+            but2.id = "del";
+            but2.setAttribute("onclick" , `deleteList(${i})`);
+            div2.classList = "listButtons";
+            div2.appendChild(but1);
+            div2.appendChild(but2);
+            but1.innerHTML = "Edit";
+            but2.innerHTML = "Delete";
+
+            i++;
+        }
+
+        function deleteList(listId){
+            let confirmDelete = confirm(`Are you sure you want to delete this list ?`)
+            if(confirmDelete){
+                let current = document.getElementById(`listItem${listId}`);
+                result.removeChild(current);
+                alert `List deleted`;
+            }
+            else{
+                alert `Delete cancel`;
+            }
+        }
+
+        function editList(listId){
+            let current = document.getElementById(`listText${listId}`);
+            let newText = prompt("Say something",current.innerHTML);
+            if(textFilter(newText)){
+                current.innerHTML = newText;
+            }
+        }
+
+        document.querySelector(".add").addEventListener("click",()=>{
+            //get 
+            let inputText = textFilter(document.getElementById("text").value);
+            let inputDate = document.getElementById("date").value;
+
+            //set
+            if(inputText){
+                showList(inputText,inputDate); 
+                input.value = "";
+                saveLocal(inputText);
+            }
+        })
+
+        document.addEventListener("keyup",(e)=>{
+            let current= e.keyCode;
+            if(current==13){
+                document.querySelector(".add").click();
+            }
+        })
+
+        //Local Storage Test
+
+        // function saveLocal(x){
+        //     localStorage.setItem(localId,x);
+        //     localId++;
+        // }
+
+        // function showLocal(){
+        //     // console.log(k);
+        //     k.map(el=>{ 
+        //         showList(localStorage.getItem(el));
+        //     })
+        // }
+        // showLocal();
+
+
+    </script>
+</body>
+</html>
